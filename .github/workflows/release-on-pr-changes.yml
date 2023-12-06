@@ -15,10 +15,11 @@ jobs:
         run: |
           RELEASE_BRANCH=$(echo ${{ github.event.pull_request.head.ref }})
           RELEASE_SHA=$(echo ${{ github.event.pull_request.head.sha }})
-          RELEASE_DESCRIPTION="john"
+          RELEASE_DESCRIPTION=$(git show -s --format=%s)
           TAG_NAME=$(echo "branch-${RELEASE_BRANCH}")
           echo "TAG_NAME=$TAG_NAME" >> "$GITHUB_ENV"
           echo "DIST_FILENAME=dist-$RELEASE_BRANCH-$RELEASE_SHA.zip" >> "$GITHUB_ENV"
+          echo "RELEASE_DESCRIPTION=$RELEASE_DESCRIPTION" >> "$GITHUB_ENV"
 
       - uses: actions/setup-node@v4
         with:
@@ -54,8 +55,7 @@ jobs:
           prerelease: true
           target_commitish: ${{ env.RELEASE_SHA }}
           tag_name: ${{ env.TAG_NAME }}
-          body: |
-            Some Body text
+          body: ${{ env.RELEASE_DESCRIPTION }}
           files: ${{ env.DIST_FILENAME }}
 
       - name: Adding summary
