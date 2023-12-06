@@ -37,7 +37,7 @@ jobs:
       - name: Bundling assets
         run: ./bundle.sh
         env:
-          VERSION: "${TAG_NAME}-${RELEASE_SHA}"
+          VERSION: ${{ env.TAG_NAME }}-${{ env.RELEASE_SHA }}"
 
       - name: Rename assets
         run: |

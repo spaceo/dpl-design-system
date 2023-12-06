@@ -30,7 +30,7 @@ jobs:
       - name: Bundling assets
         run: ./bundle.sh
         env:
-          VERSION: "${RELEASE_NAME}-${RELEASE_SHA}"
+          VERSION: ${{ env.RELEASE_NAME }}-${{ env.RELEASE_SHA }}"
 
       - name: Rename assets
         run: |
@@ -40,7 +40,7 @@ jobs:
         id: create-release
         uses: softprops/action-gh-release@v1
         with:
-          files: $DIST_FILENAME
+          files: ${{ env.DIST_FILENAME }}
 
       - name: Adding summary
         run: |
