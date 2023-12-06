@@ -23,7 +23,6 @@ jobs:
       - name: Set release name
         id: resolve-release-vars
         run: |
-          echo
           RELEASE=$(echo ${{ github.event.pull_request.head.ref }})
           TAG_NAME=$(echo "branch-${RELEASE}")
           echo "TAG_NAME=$TAG_NAME" >> "$GITHUB_ENV"
@@ -49,7 +48,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           prerelease: true
-          target_commitish: ${{ github.sha }}
+          target_commitish: ${{ env.RELEASE }}
           tag_name: ${{ env.TAG_NAME }}
           files: ${{ env.DIST_FILENAME }}
 
