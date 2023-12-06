@@ -35,6 +35,11 @@ jobs:
           mv dist.zip $DIST_FILENAME
 
       - name: Create release
+        id: create-release
         uses: softprops/action-gh-release@v1
         with:
           files: $DIST_FILENAME
+
+      - name: Adding summary
+        run: |
+          echo "Release created 🚀😎 at: ${{ steps.create-release.outputs.url }}" >> $GITHUB_STEP_SUMMARY
