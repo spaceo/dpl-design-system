@@ -11,10 +11,11 @@ jobs:
       - name: Set release name
         id: resolve-release-vars
         run: |
-          RELEASE=$(echo ${{ github.event.pull_request.head.ref }})
-          TAG_NAME=$(echo "branch-${RELEASE}")
+          RELEASE_BRANCH=$(echo ${{ github.event.pull_request.head.ref }})
+          RELEASE_SHA=$(echo ${{ github.event.pull_request.head.sha }})
+          TAG_NAME=$(echo "branch-${RELEASE_BRANCH}")
           echo "TAG_NAME=$TAG_NAME" >> "$GITHUB_ENV"
-          echo "DIST_FILENAME=dist-$RELEASE-${{ github.sha }}.zip" >> "$GITHUB_ENV"
+          echo "DIST_FILENAME=dist-$RELEASE_BRANCH-$RELEASE_SHA.zip" >> "$GITHUB_ENV"
 
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -26,7 +27,7 @@ jobs:
         run: yarn css:build
 
       - name: Bundling assets
-        run: VERSION="${TAG_NAME}-${{ github.sha }}" ./bundle.sh
+        run: VERSION="${TAG_NAME}-${RELEASE_SHA}" ./bundle.sh
 
       - name: Rename assets
         run: |
@@ -48,8 +49,10 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           prerelease: true
-          target_commitish: ${{ env.RELEASE }}
+          target_commitish: ${{ env.RELEASE_SHA }}
           tag_name: ${{ env.TAG_NAME }}
           files: ${{ env.DIST_FILENAME }}
 
+      - name: Adding markdown
+        run: echo '### Hello world! 🚀' >> $GITHUB_STEP_SUMMARY
 
