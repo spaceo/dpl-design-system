@@ -13,6 +13,7 @@ jobs:
         run: |
           RELEASE_BRANCH=$(echo ${{ github.event.pull_request.head.ref }})
           RELEASE_SHA=$(echo ${{ github.event.pull_request.head.sha }})
+          RELEASE_DESCRIPTION=$(git show -s --format=%s $RELEASE_SHA)
           TAG_NAME=$(echo "branch-${RELEASE_BRANCH}")
           echo "TAG_NAME=$TAG_NAME" >> "$GITHUB_ENV"
           echo "DIST_FILENAME=dist-$RELEASE_BRANCH-$RELEASE_SHA.zip" >> "$GITHUB_ENV"
@@ -52,9 +53,9 @@ jobs:
           prerelease: true
           target_commitish: ${{ env.RELEASE_SHA }}
           tag_name: ${{ env.TAG_NAME }}
+          body: ${{ env.RELEASE_DESCRIPTION }}
           files: ${{ env.DIST_FILENAME }}
 
       - name: Adding summary
         run: |
           echo "Release created 🚀😎 at: ${{ steps.create-release.outputs.url }}" >> $GITHUB_STEP_SUMMARY
-
