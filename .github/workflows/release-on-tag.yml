@@ -31,11 +31,12 @@ jobs:
       - name: Bundling assets
         run: ./bundle.sh
         env:
-          VERSION: ${{ env.RELEASE_NAME }}-${{ env.RELEASE_SHA }}
+          # VERSION: ${{ env.RELEASE_NAME }}-${{ env.RELEASE_SHA }}
+          VERSION: "john"
 
       - name: Rename assets
         run: |
-          mv dist.zip $DIST_FILENAME
+          mv dist.zip ${{ env.DIST_FILENAME }}
 
       - name: Create release
         id: create-release
