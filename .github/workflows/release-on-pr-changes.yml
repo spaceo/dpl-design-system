@@ -9,17 +9,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Get release description
+        run: |
+          echo "RELEASE_DESCRIPTION=$(git show -s --format=%s)" >> "$GITHUB_ENV"
+
+      - uses: actions/checkout@v4
 
       - name: Set release name
         id: resolve-release-vars
         run: |
           RELEASE_BRANCH=$(echo ${{ github.event.pull_request.head.ref }})
           RELEASE_SHA=$(echo ${{ github.event.pull_request.head.sha }})
-          RELEASE_DESCRIPTION=$(git show -s --format=%s)
           TAG_NAME=$(echo "branch-${RELEASE_BRANCH}")
           echo "TAG_NAME=$TAG_NAME" >> "$GITHUB_ENV"
           echo "DIST_FILENAME=dist-$RELEASE_BRANCH-$RELEASE_SHA.zip" >> "$GITHUB_ENV"
-          echo "RELEASE_DESCRIPTION=$RELEASE_DESCRIPTION" >> "$GITHUB_ENV"
 
       - uses: actions/setup-node@v4
         with:
