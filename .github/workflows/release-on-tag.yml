@@ -29,10 +29,7 @@ jobs:
         run: yarn css:build
 
       - name: Bundling assets
-        run: ./bundle.sh
-        env:
-          # VERSION: ${{ env.RELEASE_NAME }}-${{ env.RELEASE_SHA }}
-          VERSION: "john"
+        run: VERSION=${{ env.RELEASE_NAME }}-${{ env.RELEASE_SHA }} ./bundle.sh
 
       - name: Rename assets
         run: |
