@@ -29,7 +29,9 @@ jobs:
         run: yarn css:build
 
       - name: Bundling assets
-        run: VERSION=${{ env.RELEASE_NAME }}-${{ env.RELEASE_SHA }} ./bundle.sh
+        run: ./bundle.sh
+        env:
+          VERSION: ${{ env.RELEASE_NAME }}-${{ env.RELEASE_SHA }}
 
       - name: Rename assets
         run: |
@@ -41,14 +43,6 @@ jobs:
         with:
           files: ${{ env.DIST_FILENAME }}
 
-      - name: Mikdebug 1
-        run: |
-          echo "Release created 🚀😎 at: ${{ steps.create-release.outputs.url }}"
-
       - name: Adding summary
         run: |
           echo "Release created 🚀😎 at: ${{ steps.create-release.outputs.url }}" >> $GITHUB_STEP_SUMMARY
-
-      - name: Mikdebug 2
-        run: |
-          echo "Release created 🚀😎 at: ${{ steps.create-release.outputs.url }}"
