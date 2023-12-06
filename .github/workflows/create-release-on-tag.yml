@@ -1,4 +1,4 @@
-name: Release on tag
+name: Create release on tag
 
 on:
   push:
@@ -66,5 +66,7 @@ jobs:
 
       - name: Adding summary
         run: |
-          echo "Npm package created 🚀 at: bla bla" >> $GITHUB_STEP_SUMMARY
+          echo "Npm package created 🚀. Version: $VERSION" >> $GITHUB_STEP_SUMMARY
+        env:
+          VERSION: ${{ env.RELEASE_NAME }}-${{ env.RELEASE_SHA }}
 

@@ -1,4 +1,4 @@
-name: Release on PR changes
+name: Create release on PR changes
 
 on:
   pull_request:
@@ -70,3 +70,18 @@ jobs:
       - name: Adding summary
         run: |
           echo "Release created 🚀😎 at: ${{ steps.create-release.outputs.url }}" >> $GITHUB_STEP_SUMMARY
+
+      - name: Release NPM package
+        # Version 0.0.0-SHA is a schema that supports semantic versioning but
+        # should sink below proper versions.
+        # Output package.json to provide insight and help debugging
+        # Using branch names as tags allows other projects to track unreleased
+        # development.
+        run: |
+          npm version 0.0.0-$VERSION --no-git-tag-version
+          echo $RELEASE_BRANCH
+          cat package.json
+          npm publish --tag $RELEASE_BRANCH
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ env.TAG_NAME }}-${{ env.RELEASE_SHA }}
