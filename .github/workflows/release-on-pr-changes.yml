@@ -8,11 +8,11 @@ jobs:
     name: "Deploy release"
     runs-on: ubuntu-latest
     steps:
-      - name: Set release name
+      - name: Set release variables
         id: resolve-release-vars
         run: |
-          RELEASE_BRANCH=$(echo ${{ github.event.pull_request.head.ref }})
-          RELEASE_SHA=$(echo ${{ github.event.pull_request.head.sha }})
+          RELEASE_BRANCH=${{ github.event.pull_request.head.ref }}
+          RELEASE_SHA=${{ github.event.pull_request.head.sha }}
           TAG_NAME=$(echo "branch-${RELEASE_BRANCH}")
           echo "TAG_NAME=$TAG_NAME" >> "$GITHUB_ENV"
           echo "DIST_FILENAME=dist-$RELEASE_BRANCH-$RELEASE_SHA.zip" >> "$GITHUB_ENV"
