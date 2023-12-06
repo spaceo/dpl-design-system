@@ -8,6 +8,14 @@ jobs:
     name: "Deploy release"
     runs-on: ubuntu-latest
     steps:
+      - name: Set release name
+        id: resolve-release-vars
+        run: |
+          RELEASE=$(echo ${{ github.event.pull_request.head.ref }})
+          TAG_NAME=$(echo "branch-${RELEASE}")
+          echo "TAG_NAME=$TAG_NAME" >> "$GITHUB_ENV"
+          echo "DIST_FILENAME=dist-$RELEASE-${{ github.sha }}.zip" >> "$GITHUB_ENV"
+
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
@@ -18,15 +26,7 @@ jobs:
         run: yarn css:build
 
       - name: Bundling assets
-        run: ./bundle.sh
-
-      - name: Set release name
-        id: resolve-release-vars
-        run: |
-          RELEASE=$(echo ${{ github.event.pull_request.head.ref }})
-          TAG_NAME=$(echo "branch-${RELEASE}")
-          echo "TAG_NAME=$TAG_NAME" >> "$GITHUB_ENV"
-          echo "DIST_FILENAME=dist-${{ github.event.pull_request.head.ref }}-${{ github.sha }}.zip" >> "$GITHUB_ENV"
+        run: VERSION="${TAG_NAME}-${{ github.sha }}" ./bundle.sh
 
       - name: Rename assets
         run: |
