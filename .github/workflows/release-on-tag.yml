@@ -28,7 +28,9 @@ jobs:
         run: yarn css:build
 
       - name: Bundling assets
-        run: VERSION=$RELEASE_NAME-$RELEASE_SHA ./bundle.sh
+        run: ./bundle.sh
+        env:
+          VERSION: "${RELEASE_NAME}-${RELEASE_SHA}"
 
       - name: Rename assets
         run: |
