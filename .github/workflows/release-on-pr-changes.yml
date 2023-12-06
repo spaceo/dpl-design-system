@@ -8,6 +8,8 @@ jobs:
     name: "Deploy release"
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+
       - name: Set release name
         id: resolve-release-vars
         run: |
@@ -18,7 +20,6 @@ jobs:
           echo "TAG_NAME=$TAG_NAME" >> "$GITHUB_ENV"
           echo "DIST_FILENAME=dist-$RELEASE_BRANCH-$RELEASE_SHA.zip" >> "$GITHUB_ENV"
 
-      - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
