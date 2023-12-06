@@ -54,7 +54,8 @@ jobs:
           prerelease: true
           target_commitish: ${{ env.RELEASE_SHA }}
           tag_name: ${{ env.TAG_NAME }}
-          body: ${{ env.RELEASE_DESCRIPTION }}
+          body: |
+            Some Body text
           files: ${{ env.DIST_FILENAME }}
 
       - name: Adding summary
