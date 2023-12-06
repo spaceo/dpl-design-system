@@ -85,3 +85,9 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERSION: ${{ env.TAG_NAME }}-${{ env.RELEASE_SHA }}
+
+      - name: Adding summary
+        run: |
+          echo "Npm package created 🚀. Version: $VERSION" >> $GITHUB_STEP_SUMMARY
+        env:
+          VERSION: ${{ env.TAG_NAME }}-${{ env.RELEASE_SHA }}
