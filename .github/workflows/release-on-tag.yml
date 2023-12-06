@@ -46,3 +46,25 @@ jobs:
       - name: Adding summary
         run: |
           echo "Release created 🚀😎 at: ${{ steps.create-release.outputs.url }}" >> $GITHUB_STEP_SUMMARY
+
+      - name: Modify package.json for local context
+        # Values in package.json must match the current GitHub repository to
+        # publish to it.
+        run: |
+          npm exec -- json -I -f package.json -e "this.name='@$GITHUB_REPOSITORY'"
+          npm exec -- json -I -f package.json -e "this.repository='https://github.com/$GITHUB_REPOSITORY'"
+
+      - name: Release NPM package
+        # The latest tag follows tagged versions to follow NPM conventions.
+        run: |
+          npm version $VERSION --no-git-tag-version
+          cat package.json
+          npm publish --tag latest
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ env.RELEASE_NAME }}-${{ env.RELEASE_SHA }}
+
+      - name: Adding summary
+        run: |
+          echo "Npm package created 🚀 at: bla bla" >> $GITHUB_STEP_SUMMARY
+
