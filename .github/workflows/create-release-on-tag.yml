@@ -10,6 +10,22 @@ jobs:
     name: "Deploy release"
     runs-on: ubuntu-latest
     steps:
+      - uses: nowsprinting/check-version-format-action@v3
+        id: version
+
+      - name: Version tag only step
+        if: steps.version.outputs.is_valid == 'true'
+        run: |
+          echo "Found valid version format in tag!"
+          echo "Full version: ${{ steps.version.outputs.full }}"
+          echo "Major version: ${{ steps.version.outputs.major }}"
+          echo "Major with pre-release: ${{ steps.version.outputs.major_prerelease }}"
+
+      - name: Stable version only step
+        if: steps.version.outputs.is_stable == 'true'
+        run: |
+          echo "Found stable version in tag!"
+
       - name: Set release variables
         id: resolve-release-vars
         run: |
